@@ -87,56 +87,31 @@ export default {
         .sm-17__lb {
             max-width: 0; opacity: 0; overflow: hidden;
             transition: max-width .5s cubic-bezier(.34,1.35,.5,1), opacity .35s;
-            display: flex;
-            align-items: center;
-            width: 100%;
+            display: flex; align-items: center; width: 100%;
         }
 
         .sm-17__dock:hover .sm-17__lb, .sm-17__dock:focus-within .sm-17__lb {
             max-width: 170px; opacity: 1;
         }
 
-        /* =========================================
-           استایل‌های جدید برای زیرمنو
-           ========================================= */
         .sm-17__chevron {
-            margin-right: auto; /* هدایت به سمت چپ در چینش راست‌چین */
-            font-size: 10px;
-            transition: transform 0.3s;
+            margin-right: auto; font-size: 10px; transition: transform 0.3s;
         }
-        
         .sm-17__item.expanded .sm-17__chevron { transform: rotate(180deg); }
 
         .sm-17__sub-menu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding-right: 44px; /* فرورفتگی زیرمنوها */
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease;
+            display: flex; flex-direction: column; gap: 4px; padding-right: 44px;
         }
 
-        .sm-17__sub-menu.open {
-            max-height: 250px;
-            margin-top: 5px;
-            margin-bottom: 5px;
-        }
+        .sm-17__sub-menu.open { max-height: 350px; margin-top: 5px; margin-bottom: 5px; }
 
         .sm-17__sub-item {
-            color: rgba(255,255,255,.5);
-            text-decoration: none;
-            font-size: 13.5px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: all 0.2s;
-            display: flex;
+            color: rgba(255,255,255,.5); text-decoration: none; font-size: 13.5px;
+            padding: 8px 12px; border-radius: 8px; transition: all 0.2s; display: flex;
         }
 
-        .sm-17__sub-item:hover, .sm-17__sub-item.active {
-            background: rgba(255,255,255,.1);
-            color: #fff;
-        }
+        .sm-17__sub-item:hover, .sm-17__sub-item.active { background: rgba(255,255,255,.1); color: #fff; }
 
         /* استایل‌های بخش محتوا */
         .content-wrapper { flex: 1; min-width: 0; }
@@ -146,9 +121,7 @@ export default {
             box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 30px 60px -28px rgba(0,0,0,.5);
             backdrop-filter: blur(22px) saturate(160%);
             -webkit-backdrop-filter: blur(22px) saturate(160%);
-            padding: 40px;
-            border-radius: 22px;
-            min-height: 80vh;
+            padding: 40px; border-radius: 22px; min-height: 80vh;
         }
         
         .content-area h1 { color: #a78bfa; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 15px; text-align: center; }
@@ -157,6 +130,45 @@ export default {
         .content-area img { max-width: 100%; border-radius: 8px; }
         .content-area blockquote { background: rgba(245, 158, 11, 0.1); border-right: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 8px; color: #fcd34d; }
         
+        /* استایل کاشی‌ها (ویندوز ۸) در صفحه خانه */
+        .tile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .tile {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.3s cubic-bezier(.34,1.35,.5,1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+        .tile:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 30px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .tile-icon {
+            font-size: 45px;
+            color: #a78bfa;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .tile-title {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
         .code-wrapper { position: relative; margin: 20px 0; }
         .copy-btn {
             position: absolute; top: 8px; left: 8px;
@@ -215,14 +227,14 @@ export default {
                 tutorials = await menuResponse.json();
 
                 tutorials.forEach((item) => {
-                    // اگر زیرمنو داشته باشد
+                    // زیرمنوها
                     if (item.subItems && item.subItems.length > 0) {
                         const wrapper = document.createElement('div');
                         wrapper.className = 'sm-17__wrapper';
                         
                         const parent = document.createElement('div');
                         parent.className = 'sm-17__item parent-btn';
-                        parent.innerHTML = \`<span class="sm-17__ic" aria-hidden="true">\${item.icon}</span><span class="sm-17__lb">\${item.title} <span class="sm-17__chevron">▼</span></span>\`;
+                        parent.innerHTML = \`<span class="sm-17__ic" aria-hidden="true">\${item.icon || '📄'}</span><span class="sm-17__lb">\${item.title} <span class="sm-17__chevron">▼</span></span>\`;
                         
                         const subMenu = document.createElement('div');
                         subMenu.className = 'sm-17__sub-menu';
@@ -240,7 +252,6 @@ export default {
                             subMenu.appendChild(subA);
                         });
                         
-                        // باز و بسته شدن زیرمنو
                         parent.onclick = () => {
                             subMenu.classList.toggle('open');
                             parent.classList.toggle('expanded');
@@ -250,14 +261,14 @@ export default {
                         wrapper.appendChild(subMenu);
                         dock.appendChild(wrapper);
                     } 
-                    // اگر منوی معمولی و بدون زیرمنو باشد
+                    // منوهای معمولی (شامل خانه)
                     else {
                         const a = document.createElement('a');
                         a.className = 'sm-17__item main-link';
                         a.href = "#" + item.id;
                         a.id = "menu-" + item.id;
                         a.onclick = () => loadContent(item.id);
-                        a.innerHTML = \`<span class="sm-17__ic" aria-hidden="true">\${item.icon}</span><span class="sm-17__lb">\${item.title}</span>\`;
+                        a.innerHTML = \`<span class="sm-17__ic" aria-hidden="true">\${item.icon || '📄'}</span><span class="sm-17__lb">\${item.title}</span>\`;
                         dock.appendChild(a);
                     }
                 });
@@ -270,7 +281,6 @@ export default {
             }
         }
 
-        // آپدیت سیستم انیمیشن برای پشتیبانی از زیرمنوها
         function initDockAnimation() {
             const items = [...dock.querySelectorAll('.sm-17__item')];
             const move = (el) => { 
@@ -289,13 +299,51 @@ export default {
             });
         }
 
+        // تابع ساخت صفحه اصلی با کاشی‌ها
+        function renderHomeTiles() {
+            let allTutorials = [];
+            
+            // استخراج تمام آموزش‌ها (حذف منوی خانه)
+            tutorials.forEach(item => {
+                if (item.isHome) return;
+                
+                if (item.subItems) {
+                    item.subItems.forEach(sub => {
+                        allTutorials.push({ id: sub.id, title: sub.title, icon: item.icon || "📄" });
+                    });
+                } else if (item.file) {
+                    allTutorials.push({ id: item.id, title: item.title, icon: item.icon || "📄" });
+                }
+            });
+
+            // معکوس کردن لیست برای نمایش جدیدترین‌ها در ابتدا (حداکثر 15 آیتم)
+            const recentTutorials = allTutorials.reverse().slice(0, 15);
+
+            let tilesHtml = '<div class="tile-grid">';
+            recentTutorials.forEach(tut => {
+                tilesHtml += \`
+                    <a href="#\${tut.id}" class="tile" onclick="loadContent('\${tut.id}')">
+                        <div class="tile-icon">\${tut.icon}</div>
+                        <div class="tile-title">\${tut.title}</div>
+                    </a>
+                \`;
+            });
+            tilesHtml += '</div>';
+
+            contentBody.innerHTML = \`
+                <h1>آموزش‌های اخیر</h1>
+                <p style="text-align:center; color: rgba(255,255,255,0.6); margin-bottom: 30px;">دسترسی سریع به جدیدترین آموزش‌ها و کانفیگ‌ها</p>
+                \${tilesHtml}
+            \`;
+        }
+
         async function loadContent(id) {
             if (tutorials.length === 0) return;
             if (!id) id = window.location.hash.substring(1);
             
             let currentItem = null;
 
-            // جستجوی آیدی در منوهای اصلی و زیرمنوها
+            // جستجو
             for (const t of tutorials) {
                 if (t.id === id && !t.subItems) { currentItem = t; break; } 
                 else if (t.subItems) {
@@ -304,12 +352,11 @@ export default {
                 }
             }
             
-            // لود پیش‌فرض در صورت نبودن آیدی
             if (!currentItem) {
-                currentItem = tutorials[0].subItems ? tutorials[0].subItems[0] : tutorials[0];
+                currentItem = tutorials[0]; // که معمولا همان خانه است
             }
 
-            // ریست کردن استایل‌های فعال
+            // مدیریت اکتیو بودن منوها
             document.querySelectorAll('.sm-17__item').forEach(a => a.removeAttribute('aria-current'));
             document.querySelectorAll('.sm-17__sub-item').forEach(a => a.classList.remove('active'));
             document.querySelectorAll('.sm-17__wrapper').forEach(w => w.classList.remove('has-active'));
@@ -329,6 +376,12 @@ export default {
                     activeLink.setAttribute('aria-current', 'page');
                     if(hl) hl.style.setProperty('--y', (activeLink.offsetTop - 12) + 'px');
                 }
+            }
+
+            // بررسی اگر منوی خانه کلیک شده است
+            if (currentItem.isHome) {
+                renderHomeTiles();
+                return; // پایان عملیات برای صفحه خانه
             }
 
             contentBody.innerHTML = '<div class="loading">در حال دریافت فایل ' + currentItem.file + '...</div>';
