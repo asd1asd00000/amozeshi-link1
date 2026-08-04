@@ -1,8 +1,14 @@
 [
   {
+    "id": "home",
+    "title": "خانه",
+    "icon": "⌂",
+    "isHome": true
+  },
+  {
     "id": "pasarguard",
     "title": "پاسارگارد",
-    "icon": "⌂",
+    "icon": "🛡️",
     "subItems": [
       { "id": "pg-install", "title": "نصب اولیه", "file": "pg-install.md" },
       { "id": "haproxy", "title": "تک‌پورت کردن", "file": "haproxy.md" }
