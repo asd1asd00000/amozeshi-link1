@@ -1,256 +1,313 @@
-html_content = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>آموزش آپلود و انتقال سورس‌کد به ریپازیتوری جدید گیتهاب</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>راهنمای آپلود asd-panel به GitHub</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
-            font-family: Tahoma, 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
             line-height: 1.8;
-            color: #333;
+            padding: 30px 15px;
             max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f4f7f6;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
         h1 {
-            color: #1a56db;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 15px;
             text-align: center;
-            font-size: 1.8em;
+            color: #38bdf8;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
         }
-        h2 {
-            color: #047857;
-            margin-top: 40px;
-            font-size: 1.5em;
-            border-bottom: 1px solid #e5e7eb;
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 40px;
+            font-size: 0.95rem;
+        }
+        .section {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 28px;
+            border: 1px solid #334155;
+        }
+        .section h2 {
+            color: #38bdf8;
+            font-size: 1.25rem;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #334155;
             padding-bottom: 10px;
         }
-        .domain-highlight {
-            color: #dc2626; /* قرمز */
-            font-weight: bold;
+        .section h3 {
+            color: #7dd3fc;
+            font-size: 1.05rem;
+            margin: 18px 0 10px;
         }
-        .step {
-            margin-bottom: 30px;
-            padding: 25px;
-            border: 1px solid #e5e7eb;
+        p, li {
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+        ul, ol {
+            padding-right: 22px;
+            margin-bottom: 12px;
+        }
+        .note {
+            background: #0f172a;
+            border-right: 4px solid #38bdf8;
+            padding: 12px 16px;
             border-radius: 8px;
-            background-color: #fdfdfd;
+            margin: 16px 0;
+            font-size: 0.95rem;
         }
-        .step-title {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #047857;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
+        .warning {
+            background: #1c1917;
+            border-right: 4px solid #f59e0b;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            color: #fcd34d;
         }
-        
-        .code-wrapper {
+        .success {
+            background: #052e16;
+            border-right: 4px solid #22c55e;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            color: #86efac;
+        }
+        .code-box {
             position: relative;
-            margin: 15px 0;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            margin: 14px 0;
+            overflow: hidden;
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e293b;
+            padding: 8px 14px;
+            border-bottom: 1px solid #334155;
+            font-size: 0.85rem;
+            color: #94a3b8;
         }
         .copy-btn {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background-color: #374151;
-            color: #d1d5db;
-            border: 1px solid #4b5563;
+            background: #334155;
+            color: #e2e8f0;
+            border: none;
+            padding: 5px 14px;
             border-radius: 6px;
-            padding: 5px 10px;
-            font-size: 0.85em;
             cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: Tahoma, sans-serif;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            z-index: 10;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            font-family: inherit;
         }
         .copy-btn:hover {
-            background-color: #4b5563;
-            color: #ffffff;
+            background: #38bdf8;
+            color: #0f172a;
         }
         .copy-btn.copied {
-            background-color: #059669;
-            border-color: #059669;
-            color: #ffffff;
+            background: #22c55e;
+            color: #fff;
         }
-        .copy-btn svg {
-            width: 14px;
-            height: 14px;
-            fill: currentColor;
-        }
-        
         pre {
-            background-color: #1f2937;
-            color: #f8fafc;
-            padding: 15px;
-            padding-top: 40px;
-            border-radius: 8px;
+            margin: 0;
+            padding: 16px;
             overflow-x: auto;
             direction: ltr;
             text-align: left;
-            font-family: Consolas, Monaco, monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            margin: 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #a5f3fc;
+            white-space: pre;
         }
         code {
-            font-family: Consolas, Monaco, monospace;
-            background-color: #e5e7eb;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.9em;
-            color: #b91c1c;
+            font-family: 'Consolas', 'Courier New', monospace;
         }
-        pre code {
-            background-color: transparent;
-            color: inherit;
-            padding: 0;
+        .step {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 12px 0;
+            border: 1px solid #334155;
         }
-        pre .domain-highlight {
-            color: #ff6b6b;
-            background-color: rgba(255, 0, 0, 0.1);
-            padding: 0 2px;
-            border-radius: 3px;
+        .step-number {
+            display: inline-block;
+            background: #38bdf8;
+            color: #0f172a;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 26px;
+            font-weight: bold;
+            margin-left: 8px;
+            font-size: 0.9rem;
         }
-        .note {
-            background-color: #fffbeb;
-            border-right: 4px solid #f59e0b;
-            padding: 20px;
-            margin: 25px 0;
-            border-radius: 4px;
-            color: #92400e;
-        }
-        ul {
-            margin-top: 10px;
-            padding-right: 20px;
-        }
-        li {
-            margin-bottom: 8px;
+        footer {
+            text-align: center;
+            color: #64748b;
+            margin-top: 40px;
+            font-size: 0.85rem;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>آموزش انتقال سورس‌کد به ریپازیتوری جدید گیتهاب</h1>
-        
-        <p>اگر فایل‌های یک پروژه را به صورت ZIP دانلود کرده‌اید و می‌خواهید آن‌ها را در یک ریپازیتوری کاملاً جدید (با نام متفاوت) در گیتهاب آپلود کنید، مراحل زیر را به دقت دنبال کنید.</p>
-        
-        <div class="note">
-            <strong>نکته مهم:</strong> تغییر نام ریپازیتوری (مثلاً از asd-panel به asd-panel2) مشکلی در کدهای اصلی ایجاد نمی‌کند. فقط بخش‌های <span class="domain-highlight">قرمز رنگ</span> در کدهای زیر را با نام کاربری و نام ریپازیتوری خودتان جایگزین کنید.
+
+    <h1>🚀 راهنمای کامل آپلود پروژه به GitHub</h1>
+    <p class="subtitle">از پوشه دانلودشده (asd-panel) به ریپازیتوری جدید (asd-panel2)</p>
+
+    <!-- بخش ۱ -->
+    <div class="section">
+        <h2>۱. جواب سوالت: اسم متفاوت مشکلی ایجاد می‌کنه؟</h2>
+        <div class="success">
+            <strong>خیر، هیچ مشکلی ایجاد نمی‌کنه.</strong><br>
+            اسم پوشه محلی (asd-panel) و اسم ریپازیتوری روی گیت‌هاب (asd-panel2) کاملاً می‌تونن متفاوت باشن. گیت فقط به محتویات داخل پوشه نگاه می‌کنه، نه اسم پوشه.
         </div>
-
-        <div class="step">
-            <div class="step-title">قدم اول: باز کردن Git Bash در پوشه پروژه</div>
-            <p>۱. ابتدا فایل ZIP دانلود شده را از حالت فشرده خارج کنید (Extract کنید).</p>
-            <p>۲. وارد پوشه اصلی پروژه شوید.</p>
-            <p>۳. <strong>ساده‌ترین راه:</strong> روی فضای خالی داخل پوشه راست‌کلیک کرده و گزینه <strong>"Git Bash Here"</strong> را انتخاب کنید. یک پنجره مشکی رنگ (خط فرمان) باز می‌شود.</p>
-        </div>
-
-        <h2>روش اول: آپلود در یک ریپازیتوری کاملاً خالی</h2>
-        <p>اگر ریپازیتوری جدیدی که در گیتهاب ساخته‌اید کاملاً خالی است (هیچ فایلی حتی README ندارد)، دستورات زیر را خط به خط در Git Bash کپی و اجرا کنید:</p>
-        
-        <div class="step">
-            <div class="code-wrapper">
-                <button class="copy-btn" onclick="copyCode(this)">
-                    <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                    <span>کپی</span>
-                </button>
-                <pre><code># حذف تاریخچه گیت قدیمی (در صورت وجود)
-rm -rf .git
-
-# ساخت ریپازیتوری جدید در پوشه فعلی
-git init
-
-# اضافه کردن تمام فایل‌ها
-git add .
-
-# ثبت تغییرات با یک پیام
-git commit -m "Initial commit"
-
-# اتصال به ریپازیتوری گیتهاب (لینک خود را جایگزین کنید)
-git remote add origin https://github.com/<span class="domain-highlight">USERNAME</span>/<span class="domain-highlight">asd-panel2</span>.git
-
-# تغییر نام شاخه اصلی به main
-git branch -M main
-
-# آپلود نهایی فایل‌ها در گیتهاب
-git push -u origin main</code></pre>
-            </div>
-        </div>
-
-        <h2>روش دوم: جایگزینی (Overwrite) روی ریپازیتوری دارای فایل</h2>
-        <p>اگر ریپازیتوری شما در گیتهاب خالی نیست و از قبل فایل‌هایی دارد (مثلاً تیک افزودن README را موقع ساخت زده‌اید) و می‌خواهید فایل‌های جدید کاملاً جایگزین قبلی‌ها شوند، از دستورات زیر استفاده کنید:</p>
-
-        <div class="step">
-            <div class="code-wrapper">
-                <button class="copy-btn" onclick="copyCode(this)">
-                    <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-                    <span>کپی</span>
-                </button>
-                <pre><code># حذف تاریخچه گیت قدیمی
-rm -rf .git
-
-# راه‌اندازی مجدد
-git init
-git add .
-git commit -m "Initial commit"
-
-# اتصال به ریپازیتوری گیتهاب
-git remote add origin https://github.com/<span class="domain-highlight">USERNAME</span>/<span class="domain-highlight">asd-panel2</span>.git
-
-# تنظیم شاخه روی main
-git branch -M main
-
-# دریافت اطلاعات اولیه از گیتهاب
-git fetch origin
-
-# آپلود و جایگزینی اجباری (Force Push)
-git push -u origin main --force</code></pre>
-            </div>
-        </div>
-        
-        <p style="text-align:center; color:#6b7280; font-size: 0.9em; margin-top: 40px; border-top: 1px solid #e5e7eb; padding-top: 20px;">
-            پایان آموزش
-        </p>
     </div>
+
+    <!-- بخش ۲ -->
+    <div class="section">
+        <h2>۲. چطور Git Bash رو باز کنی؟</h2>
+        <div class="step">
+            <span class="step-number">1</span>
+            روی دسکتاپ یا Start Menu سرچ کن: <strong>Git Bash</strong>
+        </div>
+        <div class="step">
+            <span class="step-number">2</span>
+            برنامه‌ای به اسم <strong>Git Bash</strong> رو باز کن. (مشکی با متن سفید)
+        </div>
+        <h3>باز کردن پوشه پروژه داخل Git Bash (بهترین روش):</h3>
+        <div class="note">
+            پوشه <strong>asd-panel</strong> (یا هر اسمی که بعد از استخراج زیپ داره) رو با موس پیدا کن → روی اون <strong>راست‌کلیک</strong> کن → گزینه <strong>"Git Bash Here"</strong> رو بزن.
+        </div>
+        <p>این بهترین و راحت‌ترین راهه.</p>
+    </div>
+
+    <!-- بخش ۳ -->
+    <div class="section">
+        <h2>۳. دستورات اصلی (ریپازیتوری خالی)</h2>
+        <p>اگر ریپازیتوری <code>asd-panel2</code> رو تازه ساختی و خالیه، این دستورات رو یکی‌یکی بزن:</p>
+
+        <div class="code-box">
+            <div class="code-header">
+                <span>دستورات Git (ریپو خالی)</span>
+                <button class="copy-btn" onclick="copyCode(this)">کپی</button>
+            </div>
+            <pre># حذف .git قدیمی
+rm -rf .git
+
+# ساخت ریپو جدید
+git init
+git add .
+git commit -m "Initial commit"
+
+# remote اضافه کن (USERNAME و اسم ریپو رو عوض کن)
+git remote add origin https://github.com/USERNAME/asd-panel2.git
+git branch -M main
+git push -u origin main</pre>
+        </div>
+
+        <div class="warning">
+            <strong>مهم:</strong> به‌جای <code>USERNAME</code> نام کاربری گیت‌هاب خودت رو بنویس.<br>
+            مثال: اگر یوزرنیم‌ت <code>asd1asd00000</code> باشه →<br>
+            <code>https://github.com/asd1asd00000/asd-panel2.git</code>
+        </div>
+    </div>
+
+    <!-- بخش ۴ -->
+    <div class="section">
+        <h2>۴. اگر ریپازیتوری از قبل فایل داشت و می‌خوای اوررایت کنی</h2>
+        <p>اگر ریپازیتوری از قبل چیزی داخلش بوده و می‌خوای کامل جایگزین کنی، از این نسخه استفاده کن:</p>
+
+        <div class="code-box">
+            <div class="code-header">
+                <span>دستورات Git (با Force Push)</span>
+                <button class="copy-btn" onclick="copyCode(this)">کپی</button>
+            </div>
+            <pre>#!/bin/bash
+rm -rf .git
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/USERNAME/asd-panel2.git
+# مهم: اول برنچ رو main کن، بعد fetch
+git branch -M main
+git fetch origin
+git push -u origin main --force</pre>
+        </div>
+
+        <div class="warning">
+            <strong>هشدار:</strong> دستور <code>--force</code> تمام تاریخچه قبلی ریپازیتوری رو پاک می‌کنه و جایگزین می‌کنه. فقط وقتی استفاده کن که مطمئنی.
+        </div>
+    </div>
+
+    <!-- بخش ۵ -->
+    <div class="section">
+        <h2>۵. خلاصه مراحل کامل (گام‌به‌گام)</h2>
+        <ol>
+            <li>روی گیت‌هاب یک ریپازیتوری جدید به اسم <strong>asd-panel2</strong> بساز (خالی، بدون README).</li>
+            <li>فایل زیپ رو استخراج کن و پوشه‌اش رو پیدا کن.</li>
+            <li>روی پوشه راست‌کلیک → <strong>Git Bash Here</strong>.</li>
+            <li>یکی از دو بلوک دستور بالا رو کپی و پیست کن (با تغییر USERNAME).</li>
+            <li>اگر ازت یوزرنیم و پسورد خواست، از <strong>Personal Access Token</strong> استفاده کن (پسورد معمولی دیگه کار نمی‌کنه).</li>
+        </ol>
+    </div>
+
+    <!-- بخش ۶ -->
+    <div class="section">
+        <h2>۶. نکات مهم</h2>
+        <ul>
+            <li>اسم پوشه محلی و اسم ریپو روی گیت‌هاب می‌تونه متفاوت باشه → مشکلی نیست.</li>
+            <li>اگر خطای authentication گرفتی، باید Personal Access Token بسازی (از Settings → Developer settings → Personal access tokens).</li>
+            <li>بعد از <code>git push</code> موفق، صفحه ریپازیتوری رو رفرش کن تا فایل‌ها رو ببینی.</li>
+        </ul>
+    </div>
+
+    <footer>
+        این فایل رو ذخیره کن و هر وقت لازم شد باز کن • کدها با یک کلیک کپی می‌شن
+    </footer>
 
     <script>
         function copyCode(btn) {
-            const pre = btn.nextElementSibling;
-            const code = pre.innerText;
-            
-            navigator.clipboard.writeText(code).then(() => {
-                const span = btn.querySelector('span');
-                const originalText = span.innerText;
-                
-                span.innerText = 'کپی شد!';
+            const pre = btn.closest('.code-box').querySelector('pre');
+            const text = pre.innerText;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const original = btn.innerText;
+                btn.innerText = 'کپی شد ✓';
                 btn.classList.add('copied');
-                
                 setTimeout(() => {
-                    span.innerText = originalText;
+                    btn.innerText = original;
                     btn.classList.remove('copied');
                 }, 2000);
             }).catch(err => {
-                console.error('Failed to copy text: ', err);
-                alert('خطا در کپی کردن کد!');
+                // fallback برای مرورگرهای قدیمی
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                btn.innerText = 'کپی شد ✓';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerText = 'کپی';
+                    btn.classList.remove('copied');
+                }, 2000);
             });
         }
     </script>
+
 </body>
-</html>"""
-
-with open('/mnt/data/github-repo-transfer-tutorial.html', 'w', encoding='utf-8') as f:
-    f.write(html_content)
-
-print('File generated: /mnt/data/github-repo-transfer-tutorial.html')
+</html>
