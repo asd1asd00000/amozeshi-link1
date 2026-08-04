@@ -15,9 +15,9 @@
     ]
   },
   {
-    "id": "marzban",
-    "title": "راه‌اندازی Marzban",
-    "file": "marzban.md",
+    "id": "github",
+    "title": "push سورس کد به ریپازیتوری گیتهاب",
+    "file": "push-github.md",
     "icon": "⚙"
   },
   {
