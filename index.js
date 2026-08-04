@@ -183,6 +183,7 @@ export default {
     return new Response(html, {
       headers: {
         "content-type": "text/html;charset=UTF-8",
+        { title: "آموزش جدید من", url: "#my-new-tutorial", active: false }
       },
     });
   },
