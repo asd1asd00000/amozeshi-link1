@@ -8,7 +8,7 @@
 
 ```bash
 apt update && apt install -y haproxy certbot
-
+```
 
 ## قدم دوم: دریافت گواهینامه
 حالا نوبت گرفتن سرتیفیکیت است:
