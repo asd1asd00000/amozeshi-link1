@@ -123,9 +123,9 @@ export default {
         const tutorials = [
             { id: "haproxy", title: "تک‌پورت کردن پاسارگارد", file: "haproxy.md" },
             { id: "marzban", title: "راه‌اندازی و دیتابیس Marzban", file: "marzban.md" },
-            { id: "xui", title: "کانفیگ و مدیریت X-UI", file: "xui.md" },
+            { id: "xui", title: "کانفیگ و مدیریت X-UI", file: "xui.md" }
 
-            { id: "svmpanel", title: "توسعه وب‌پنل svm-panel", file: "svmpanel.md" }
+          
         ];
 
         const menuContainer = document.getElementById('dynamic-menu');
