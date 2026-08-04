@@ -7,11 +7,11 @@
   },
   {
     "id": "pasarguard",
-    "title": "پاسارگارد",
+    "title": " پنل پاسارگارد",
     "icon": "🛡️",
     "subItems": [
       { "id": "pg-install", "title": "نصب اولیه", "file": "pg-install.md" },
-      { "id": "haproxy", "title": "تک‌پورت کردن", "file": "haproxy.md", "pinned": true }
+      { "id": "haproxy", "title": "تک‌پورت کردن پنل پاسارگارد با HAProxy ", "file": "haproxy.md", "pinned": true }
     ]
   },
   {
