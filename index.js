@@ -8,9 +8,6 @@ export default {
     <title>مرجع آموزش‌های شبکه و پنل‌ها</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        /* =========================================
-           تنظیمات پایه و استایل‌های عمومی (Dark Mode)
-           ========================================= */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
@@ -29,9 +26,6 @@ export default {
             line-height: 1.8;
         }
 
-        /* =========================================
-           استایل‌های منوی کناری (Dock)
-           ========================================= */
         .sm-17__dock {
             position: sticky;
             top: 26px;
@@ -52,9 +46,7 @@ export default {
             flex-shrink: 0;
         }
 
-        .sm-17__dock:hover, .sm-17__dock:focus-within {
-            width: var(--w-max);
-        }
+        .sm-17__dock:hover, .sm-17__dock:focus-within { width: var(--w-max); }
 
         .sm-17__hl {
             position: absolute;
@@ -87,24 +79,17 @@ export default {
         }
 
         .sm-17__item[aria-current="page"] { color: #fff; }
-        
         .sm-17__ic { font-size: 20px; width: 22px; text-align: center; flex: none; }
         
         .sm-17__lb {
-            max-width: 0;
-            opacity: 0;
-            overflow: hidden;
+            max-width: 0; opacity: 0; overflow: hidden;
             transition: max-width .5s cubic-bezier(.34,1.35,.5,1), opacity .35s;
         }
 
         .sm-17__dock:hover .sm-17__lb, .sm-17__dock:focus-within .sm-17__lb {
-            max-width: 150px;
-            opacity: 1;
+            max-width: 150px; opacity: 1;
         }
 
-        /* =========================================
-           استایل‌های بخش محتوا (شیشه‌ای تاریک)
-           ========================================= */
         .content-wrapper { flex: 1; min-width: 0; }
         
         .content-area {
@@ -115,6 +100,7 @@ export default {
             -webkit-backdrop-filter: blur(22px) saturate(160%);
             padding: 40px;
             border-radius: 22px;
+            min-height: 80vh;
         }
         
         .content-area h1 { color: #a78bfa; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 15px; text-align: center; }
@@ -123,7 +109,6 @@ export default {
         .content-area img { max-width: 100%; border-radius: 8px; }
         .content-area blockquote { background: rgba(245, 158, 11, 0.1); border-right: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 8px; color: #fcd34d; }
         
-        /* استایل کدهای کپی‌دار */
         .code-wrapper { position: relative; margin: 20px 0; }
         .copy-btn {
             position: absolute; top: 8px; left: 8px;
@@ -152,60 +137,60 @@ export default {
             body { flex-direction: column; padding: 15px; }
             .sm-17__dock { width: 100% !important; flex-direction: row; flex-wrap: wrap; justify-content: center; position: static; }
             .sm-17__lb { max-width: 150px; opacity: 1; }
-            .sm-17__hl { display: none; } /* غیرفعال کردن انیمیشن هایلایت در موبایل */
+            .sm-17__hl { display: none; }
         }
     </style>
 </head>
 <body>
     
-    <!-- منوی کناری داک -->
     <nav class="sm-17__dock" id="sm-17-dock" aria-label="Primary">
         <span class="sm-17__hl" aria-hidden="true"></span>
-        <!-- آیتم‌های منو توسط جاوااسکریپت در اینجا لود می‌شوند -->
     </nav>
 
-    <!-- بخش اصلی محتوا -->
     <div class="content-wrapper">
         <div class="content-area" id="content-body">
-            <div class="loading">در حال بارگذاری اطلاعات...</div>
+            <div class="loading">در حال بارگذاری اطلاعات سایت...</div>
         </div>
     </div>
 
     <script>
-        /* =========================================================
-           ۱. آدرس گیت‌هاب خود را اینجا وارد کنید
-           ========================================================= */
+        // آدرس پایه گیت‌هاب
         const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/asd1asd00000/amozeshi-link1/main/docs/";
-
-        /* =========================================================
-           ۲. لیست آموزش‌ها
-           نکته جدید: متغیر icon اضافه شده تا بتوانید آیکون هر منو را تعیین کنید
-           ========================================================= */
-        const tutorials = [
-            { id: "haproxy", title: "تک‌پورت پاسارگارد", file: "haproxy.md", icon: "⌂" },
-            { id: "marzban", title: "راه‌اندازی Marzban", file: "marzban.md", icon: "⚙" },
-            { id: "xui", title: "مدیریت X-UI", file: "xui.md", icon: "▤" },
-            { id: "reality", title: "تنظیمات Reality", file: "reality.md", icon: "◔" },
-            { id: "svmpanel", title: "توسعه svm-panel", file: "svmpanel.md", icon: "✉" }
-        ];
-
+        
+        let tutorials = [];
         const dock = document.getElementById('sm-17-dock');
         const contentBody = document.getElementById('content-body');
         const hl = dock.querySelector('.sm-17__hl');
 
-        // ساخت منو به سبک جدید
-        tutorials.forEach((item) => {
-            const a = document.createElement('a');
-            a.className = 'sm-17__item';
-            a.href = "#" + item.id;
-            a.id = "menu-" + item.id;
-            a.onclick = () => loadContent(item.id);
-            
-            a.innerHTML = \`<span class="sm-17__ic" aria-hidden="true">\${item.icon}</span><span class="sm-17__lb">\${item.title}</span>\`;
-            dock.appendChild(a);
-        });
+        // تابع اصلی برای راه‌اندازی سایت
+        async function initApp() {
+            try {
+                // ۱. خواندن فایل منوها (JSON) از گیت‌هاب
+                const menuResponse = await fetch(GITHUB_RAW_BASE + "menu.json");
+                if (!menuResponse.ok) throw new Error("فایل menu.json پیدا نشد");
+                tutorials = await menuResponse.json();
 
-        // سیستم انیمیشن هاور داک (تبدیل شده از کد شما)
+                // ۲. ساخت دکمه‌های منو
+                tutorials.forEach((item) => {
+                    const a = document.createElement('a');
+                    a.className = 'sm-17__item';
+                    a.href = "#" + item.id;
+                    a.id = "menu-" + item.id;
+                    a.onclick = () => loadContent(item.id);
+                    a.innerHTML = \`<span class="sm-17__ic" aria-hidden="true">\${item.icon}</span><span class="sm-17__lb">\${item.title}</span>\`;
+                    dock.appendChild(a);
+                });
+
+                // ۳. راه‌اندازی انیمیشن‌ها و لود اولین محتوا
+                initDockAnimation();
+                loadContent();
+
+            } catch (error) {
+                contentBody.innerHTML = \`<h2 style="color:#ef4444;">خطای سیستمی</h2><p>\${error.message}</p>\`;
+            }
+        }
+
+        // سیستم انیمیشن هاور داک
         function initDockAnimation() {
             const items = [...dock.querySelectorAll('.sm-17__item')];
             const move = (el) => { 
@@ -223,17 +208,16 @@ export default {
             });
         }
 
-        // بارگذاری محتوا بر اساس هَش URL
+        // بارگذاری محتوای آموزشی
         async function loadContent(id) {
+            if (tutorials.length === 0) return;
             if (!id) id = window.location.hash.substring(1) || tutorials[0].id;
             const currentItem = tutorials.find(t => t.id === id) || tutorials[0];
 
-            // مدیریت کلاس اکتیو برای داک جدید
             document.querySelectorAll('.sm-17__item').forEach(a => a.removeAttribute('aria-current'));
             const activeLink = document.getElementById("menu-" + currentItem.id);
             if(activeLink) {
                 activeLink.setAttribute('aria-current', 'page');
-                // حرکت دادن هایلایت به سمت آیتم کلیک شده
                 if(hl) hl.style.setProperty('--y', (activeLink.offsetTop - 12) + 'px');
             }
 
@@ -241,7 +225,7 @@ export default {
 
             try {
                 const response = await fetch(GITHUB_RAW_BASE + currentItem.file);
-                if (!response.ok) throw new Error("File not found");
+                if (!response.ok) throw new Error("فایل پیدا نشد");
                 
                 const text = await response.text();
                 contentBody.innerHTML = marked.parse(text);
@@ -249,7 +233,7 @@ export default {
             } catch (error) {
                 contentBody.innerHTML = \`
                     <h2 style="color:#ef4444;">خطا در بارگذاری!</h2>
-                    <p>فایل <b>\${currentItem.file}</b> در پوشه docs پیدا نشد.</p>
+                    <p>فایل <b>\${currentItem.file}</b> در گیت‌هاب پیدا نشد.</p>
                 \`;
             }
         }
@@ -280,11 +264,7 @@ export default {
             });
         }
 
-        // اجرا
-        window.addEventListener('load', () => {
-            loadContent();
-            initDockAnimation(); // راه‌اندازی انیمیشن‌ها بعد از لود صفحه
-        });
+        window.addEventListener('load', initApp);
         window.addEventListener('hashchange', () => loadContent());
     </script>
 </body>
