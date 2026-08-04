@@ -1,0 +1,1 @@
+# amozeshi-link1
