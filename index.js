@@ -114,7 +114,7 @@ export default {
            عبارت YOUR_USERNAME را با یوزرنیم گیت‌هاب
            و YOUR_REPO را با نام ریپازیتوری خود جایگزین کنید.
            ========================================================= */
-        const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/asd1asd00000/amozeshi-link1/tree/main/docs/";
+        const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/asd1asd00000/amozeshi-link1/main/docs/";
 
         /* =========================================================
            ۲. لیست آموزش‌ها و فایل‌های متنی آن‌ها را اینجا مشخص کنید
