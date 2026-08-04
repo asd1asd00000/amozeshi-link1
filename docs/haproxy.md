@@ -1,63 +1,72 @@
-آموزش جامع تک‌پورت کردن پنل پاسارگارد با HAProxy
-این آموزش به شما کمک می‌کند تا پنل مدیریتی خود را روی یک دامنه (مثلاً main1.sportsee.ru) و لینک‌های سابسکریپشن کاربران را روی دامنه‌ای کاملاً متفاوت (مثلاً sub.karnovo.net.ru) قرار دهید. با این روش، دسترسی به پنل مدیریت از طریق لینک کاربران غیرممکن می‌شود.
+<h1>آموزش جامع تک‌پورت کردن پنل پاسارگارد با HAProxy</h1>
 
-توجه: در تمامی کدهای زیر، عبارات قرمز رنگ را با نام دامنه‌های واقعی خود جایگزین کنید.
-پیش‌نیازها:
-دو ساب‌دامنه در پنل DNS خود (مانند کلودفلر) ایجاد کنید و رکورد A آن‌ها را روی IP سرور خود تنظیم کنید.
-تیک پروکسی (ابر نارنجی کلودفلر) را خاموش نگه دارید تا بتوانیم گواهینامه SSL دریافت کنیم (پس از پایان کار می‌توانید روشن کنید).
-قدم اول: آزادسازی پورت‌ها و تغییرات در پاسارگارد
-ابتدا باید SSL داخلی پاسارگارد را غیرفعال کنیم تا پورت‌ها برای HAProxy آزاد شوند. فایل تنظیمات را باز کنید:
+<p>این آموزش به شما کمک می‌کند تا پنل مدیریتی خود را روی یک دامنه (مثلاً <code>main1.sportsee.ru</code>) و لینک‌های سابسکریپشن کاربران را روی دامنه‌ای کاملاً متفاوت (مثلاً <code>sub.karnovo.net.ru</code>) قرار دهید. با این روش، دسترسی به پنل مدیریت از طریق لینک کاربران غیرممکن می‌شود.</p>
 
+<blockquote>
+  <strong>توجه:</strong> در تمامی کدهای زیر، عبارات مربوط به نام دامنه‌ها را با دامنه‌های واقعی خود جایگزین کنید.
+</blockquote>
 
-کپی
-nano /opt/pasarguard/.env
-تغییرات زیر را اعمال کنید (خطوط SSL را با گذاشتن # کامنت کرده و دریافت پروکسی را فعال کنید):
+<p><strong>پیش‌نیازها:</strong></p>
+<ul>
+  <li>دو ساب‌دامنه در پنل DNS خود (مانند کلودفلر) ایجاد کنید و رکورد A آن‌ها را روی IP سرور خود تنظیم کنید.</li>
+  <li>تیک پروکسی (ابر نارنجی کلودفلر) را <strong>خاموش</strong> نگه دارید تا بتوانیم گواهینامه SSL دریافت کنیم (پس از پایان کار می‌توانید روشن کنید).</li>
+</ul>
 
+<hr>
 
-کپی
-# UVICORN_SSL_CERTFILE = "/var..."
+<h2>قدم اول: آزادسازی پورت‌ها و تغییرات در پاسارگارد</h2>
+
+<p>ابتدا باید SSL داخلی پاسارگارد را غیرفعال کنیم تا پورت‌ها برای HAProxy آزاد شوند. فایل تنظیمات را باز کنید:</p>
+
+<pre><code>nano /opt/pasarguard/.env</code></pre>
+
+<p>تغییرات زیر را اعمال کنید (خطوط SSL را با گذاشتن <code>#</code> کامنت کرده و دریافت پروکسی را فعال کنید):</p>
+
+<pre><code># UVICORN_SSL_CERTFILE = "/var..."
 # UVICORN_SSL_KEYFILE = "/var..."
 
 UVICORN_PROXY_HEADERS = True
-UVICORN_FORWARDED_ALLOW_IPS = "127.0.0.1"
-پس از ذخیره (Ctrl+X و Y)، سرویس را ری‌استارت کنید:
+UVICORN_FORWARDED_ALLOW_IPS = "127.0.0.1"</code></pre>
 
+<p>پس از ذخیره (<code>Ctrl+X</code> و <code>Y</code>)، سرویس را ری‌استارت کنید:</p>
 
-کپی
-pasarguard restart
-قدم دوم: نصب پیش‌نیازها و دریافت گواهینامه SSL
-نصب HAProxy و Certbot:
+<pre><code>pasarguard restart</code></pre>
 
+<hr>
 
-کپی
-apt update && apt install -y haproxy certbot
-دریافت گواهینامه مشترک (دامنه‌های خود را در دستور زیر جایگزین کنید):
+<h2>قدم دوم: نصب پیش‌نیازها و دریافت گواهینامه SSL</h2>
 
+<p>نصب HAProxy و Certbot:</p>
 
-کپی
-certbot certonly --standalone -d main1.sportsee.ru -d sub.karnovo.net.ru
-قدم سوم: تجمیع کلیدهای SSL برای HAProxy
-ابتدا پوشه مربوط به گواهینامه‌های HAProxy را بسازید:
+<pre><code>apt update && apt install -y haproxy certbot</code></pre>
 
+<p>دریافت گواهینامه مشترک (دامنه‌های خود را در دستور زیر جایگزین کنید):</p>
 
-کپی
-mkdir -p /etc/haproxy/certs
-کلیدها را ادغام کنید (توجه کنید مسیر فایل‌ها همیشه به نام دامنه اول ایجاد می‌شود):
+<pre><code>certbot certonly --standalone -d main1.sportsee.ru -d sub.karnovo.net.ru</code></pre>
 
+<hr>
 
-کپی
-cat /etc/letsencrypt/live/main1.sportsee.ru/fullchain.pem     /etc/letsencrypt/live/main1.sportsee.ru/privkey.pem     > /etc/haproxy/certs/all_domains.pem
-قدم چهارم: پیکربندی HAProxy
-فایل تنظیمات HAProxy را باز کنید:
+<h2>قدم سوم: تجمیع کلیدهای SSL برای HAProxy</h2>
 
+<p>ابتدا پوشه مربوط به گواهینامه‌های HAProxy را بسازید:</p>
 
-کپی
-nano /etc/haproxy/haproxy.cfg
-محتویات قبلی را پاک کرده و کدهای کامل زیر را قرار دهید (دامنه‌های خود را در بخش acl جایگزین کنید):
+<pre><code>mkdir -p /etc/haproxy/certs</code></pre>
 
+<p>کلیدها را ادغام کنید (توجه کنید مسیر فایل‌ها همیشه به نام <strong>دامنه اول</strong> ایجاد می‌شود):</p>
 
-کپی
-global
+<pre><code>cat /etc/letsencrypt/live/main1.sportsee.ru/fullchain.pem /etc/letsencrypt/live/main1.sportsee.ru/privkey.pem > /etc/haproxy/certs/all_domains.pem</code></pre>
+
+<hr>
+
+<h2>قدم چهارم: پیکربندی HAProxy</h2>
+
+<p>فایل تنظیمات HAProxy را باز کنید:</p>
+
+<pre><code>nano /etc/haproxy/haproxy.cfg</code></pre>
+
+<p>محتویات قبلی را پاک کرده و کدهای کامل زیر را قرار دهید (دامنه‌های خود را در بخش <code>acl</code> جایگزین کنید):</p>
+
+<pre><code>global
     log /dev/log local0
     log /dev/log local1 notice
     user haproxy
@@ -109,20 +118,25 @@ backend sub
 
 backend deny_backend
     mode http
-    http-request deny deny_status 403
-قدم پنجم: تست کانفیگ و استارت سرویس
-تست عدم وجود خطا در فایل کانفیگ:
+    http-request deny deny_status 403</code></pre>
 
+<hr>
 
-کپی
-haproxy -c -f /etc/haproxy/haproxy.cfg
-اگر خروجی Configuration file is valid بود، سرویس را ری‌استارت کنید:
+<h2>قدم پنجم: تست کانفیگ و استارت سرویس</h2>
 
+<p>تست عدم وجود خطا در فایل کانفیگ:</p>
 
-کپی
-systemctl restart haproxy
-systemctl status haproxy
-قدم ششم: تنظیمات نهایی در داشبورد پاسارگارد
-۱. با آدرس جدید https://main1.sportsee.ru وارد پنل شوید.
-۲. به بخش تنظیمات نودها (Nodes) بروید.
-۳. فیلد دامنه سابسکریپشن (Subscription Domain) را روی https://sub.karnovo.net.ru تنظیم کنید.
+<pre><code>haproxy -c -f /etc/haproxy/haproxy.cfg</code></pre>
+
+<p>اگر خروجی <code>Configuration file is valid</code> بود، سرویس را ری‌استارت کنید:</p>
+
+<pre><code>systemctl restart haproxy
+systemctl status haproxy</code></pre>
+
+<hr>
+
+<h2>قدم ششم: تنظیمات نهایی در داشبورد پاسارگارد</h2>
+
+<p>۱. با آدرس جدید <code>https://main1.sportsee.ru</code> وارد پنل شوید.<br>
+۲. به بخش <strong>تنظیمات نودها (Nodes)</strong> بروید.<br>
+۳. فیلد <strong>دامنه سابسکریپشن (Subscription Domain)</strong> را روی <code>https://sub.karnovo.net.ru</code> تنظیم کنید.</p>
