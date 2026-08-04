@@ -6,179 +6,254 @@ export default {
 <head>
     <meta charset="UTF-8">
     <title>مرجع آموزش‌های شبکه و پنل‌ها</title>
-    <!-- اضافه کردن کتابخانه Marked.js برای تبدیل متن به HTML -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
+        /* =========================================
+           تنظیمات پایه و استایل‌های عمومی (Dark Mode)
+           ========================================= */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
-            font-family: Tahoma, 'Segoe UI', system-ui, sans-serif;
-            line-height: 1.8;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f7f6;
+            --accent: oklch(0.66 0.2 275);
+            --w-min: 75px;
+            --w-max: 230px;
             display: flex;
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+            align-items: flex-start;
+            gap: 24px;
+            width: 100%;
+            min-height: 100vh;
+            padding: 26px;
+            font-family: 'Segoe UI', Tahoma, system-ui, sans-serif;
+            background: radial-gradient(120% 120% at 10% 10%, #1e1b3a, #0b0a17 70%);
+            color: rgba(255,255,255,.85);
+            line-height: 1.8;
         }
-        
-        .sidebar {
-            width: 280px;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-            height: fit-content;
-            position: sticky;
-            top: 20px;
-        }
-        .sidebar h3 {
-            color: #1a56db;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 10px;
-            margin-top: 0;
-            text-align: center;
-        }
-        .menu-list { list-style: none; padding: 0; margin: 0; }
-        .menu-list li { margin-bottom: 10px; }
-        .menu-list a {
-            display: block; padding: 10px 15px; text-decoration: none;
-            color: #4b5563; background-color: #f9fafb;
-            border-radius: 8px; border: 1px solid #e5e7eb;
-            transition: all 0.2s; font-weight: bold; cursor: pointer;
-        }
-        .menu-list a:hover { background-color: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
-        .menu-list a.active { background-color: #1d4ed8; color: #ffffff; border-color: #1e40af; }
 
-        .content-area {
-            flex: 1;
-            background-color: #ffffff;
-            padding: 40px;
+        /* =========================================
+           استایل‌های منوی کناری (Dock)
+           ========================================= */
+        .sm-17__dock {
+            position: sticky;
+            top: 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: var(--w-min);
+            padding: 12px;
+            border-radius: 22px;
+            overflow: hidden;
+            isolation: isolate;
+            background: color-mix(in oklab, white 8%, rgba(10,10,20,.35));
+            border: 1px solid rgba(255,255,255,.16);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 30px 60px -28px rgba(0,0,0,.8);
+            backdrop-filter: blur(22px) saturate(160%);
+            -webkit-backdrop-filter: blur(22px) saturate(160%);
+            transition: width .5s cubic-bezier(.34,1.35,.5,1);
+            flex-shrink: 0;
+        }
+
+        .sm-17__dock:hover, .sm-17__dock:focus-within {
+            width: var(--w-max);
+        }
+
+        .sm-17__hl {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            height: 44px;
             border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-            min-width: 0;
+            background: color-mix(in oklab, var(--accent) 70%, transparent);
+            box-shadow: 0 6px 18px -6px var(--accent);
+            transform: translateY(var(--y,0));
+            transition: transform .4s cubic-bezier(.34,1.35,.5,1);
+            pointer-events: none;
+        }
+
+        .sm-17__item {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-height: 44px;
+            padding: 0 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: rgba(255,255,255,.6);
+            font-size: 14.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .sm-17__item[aria-current="page"] { color: #fff; }
+        
+        .sm-17__ic { font-size: 20px; width: 22px; text-align: center; flex: none; }
+        
+        .sm-17__lb {
+            max-width: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-width .5s cubic-bezier(.34,1.35,.5,1), opacity .35s;
+        }
+
+        .sm-17__dock:hover .sm-17__lb, .sm-17__dock:focus-within .sm-17__lb {
+            max-width: 150px;
+            opacity: 1;
+        }
+
+        /* =========================================
+           استایل‌های بخش محتوا (شیشه‌ای تاریک)
+           ========================================= */
+        .content-wrapper { flex: 1; min-width: 0; }
+        
+        .content-area {
+            background: color-mix(in oklab, white 3%, rgba(10,10,20,.35));
+            border: 1px solid rgba(255,255,255,.08);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 30px 60px -28px rgba(0,0,0,.5);
+            backdrop-filter: blur(22px) saturate(160%);
+            -webkit-backdrop-filter: blur(22px) saturate(160%);
+            padding: 40px;
+            border-radius: 22px;
         }
         
-        /* استایل‌های مربوط به خروجی Markdown */
-        .content-area h1 { color: #1a56db; border-bottom: 2px solid #e5e7eb; padding-bottom: 15px; text-align: center; }
-        .content-area h2 { color: #047857; margin-top: 40px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; }
-        .content-area h3 { color: #374151; margin-top: 30px; }
+        .content-area h1 { color: #a78bfa; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 15px; text-align: center; }
+        .content-area h2 { color: #34d399; margin-top: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .content-area h3 { color: #9ca3af; margin-top: 30px; }
         .content-area img { max-width: 100%; border-radius: 8px; }
-        .content-area blockquote { background: #fffbeb; border-right: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 4px; color: #92400e; }
+        .content-area blockquote { background: rgba(245, 158, 11, 0.1); border-right: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 8px; color: #fcd34d; }
         
         /* استایل کدهای کپی‌دار */
         .code-wrapper { position: relative; margin: 20px 0; }
         .copy-btn {
             position: absolute; top: 8px; left: 8px;
-            background-color: #374151; color: #d1d5db;
-            border: 1px solid #4b5563; border-radius: 6px;
+            background-color: rgba(255,255,255,0.1); color: #d1d5db;
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 8px;
             padding: 5px 10px; font-size: 0.85em; cursor: pointer;
             transition: all 0.2s; display: flex; align-items: center; gap: 6px; z-index: 10; font-family: Tahoma;
+            backdrop-filter: blur(4px);
         }
-        .copy-btn:hover { background-color: #4b5563; color: #ffffff; }
+        .copy-btn:hover { background-color: rgba(255,255,255,0.2); color: #ffffff; }
         .copy-btn.copied { background-color: #059669; border-color: #059669; color: #ffffff; }
         .copy-btn svg { width: 14px; height: 14px; fill: currentColor; }
         
         pre {
-            background-color: #1f2937; color: #f8fafc; padding: 20px; padding-top: 45px;
-            border-radius: 8px; overflow-x: auto; direction: ltr; text-align: left;
+            background-color: rgba(0,0,0,0.3); color: #f8fafc; padding: 20px; padding-top: 45px;
+            border-radius: 12px; overflow-x: auto; direction: ltr; text-align: left;
             font-family: Consolas, Monaco, monospace; font-size: 14px; line-height: 1.5; margin: 0;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-        code { font-family: Consolas, Monaco, monospace; background-color: #e5e7eb; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #b91c1c; }
+        code { font-family: Consolas, Monaco, monospace; background-color: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #fca5a5; }
         pre code { background-color: transparent; color: inherit; padding: 0; }
 
-        .loading { text-align: center; color: #6b7280; font-size: 1.2em; margin-top: 50px; }
+        .loading { text-align: center; color: rgba(255,255,255,0.5); font-size: 1.2em; margin-top: 50px; }
 
         @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { width: auto; position: static; }
+            body { flex-direction: column; padding: 15px; }
+            .sm-17__dock { width: 100% !important; flex-direction: row; flex-wrap: wrap; justify-content: center; position: static; }
+            .sm-17__lb { max-width: 150px; opacity: 1; }
+            .sm-17__hl { display: none; } /* غیرفعال کردن انیمیشن هایلایت در موبایل */
         }
     </style>
 </head>
 <body>
     
-    <aside class="sidebar">
-        <h3>فهرست آموزش‌ها</h3>
-        <ul class="menu-list" id="dynamic-menu">
-            <!-- منو توسط جاوااسکریپت ساخته می‌شود -->
-        </ul>
-    </aside>
+    <!-- منوی کناری داک -->
+    <nav class="sm-17__dock" id="sm-17-dock" aria-label="Primary">
+        <span class="sm-17__hl" aria-hidden="true"></span>
+        <!-- آیتم‌های منو توسط جاوااسکریپت در اینجا لود می‌شوند -->
+    </nav>
 
-    <div class="content-area" id="content-body">
-        <div class="loading">در حال بارگذاری اطلاعات...</div>
+    <!-- بخش اصلی محتوا -->
+    <div class="content-wrapper">
+        <div class="content-area" id="content-body">
+            <div class="loading">در حال بارگذاری اطلاعات...</div>
+        </div>
     </div>
 
     <script>
         /* =========================================================
-           ۱. آدرس گیت‌هاب خود را اینجا وارد کنید:
-           عبارت YOUR_USERNAME را با یوزرنیم گیت‌هاب
-           و YOUR_REPO را با نام ریپازیتوری خود جایگزین کنید.
+           ۱. آدرس گیت‌هاب خود را اینجا وارد کنید
            ========================================================= */
         const GITHUB_RAW_BASE = "https://raw.githubusercontent.com/asd1asd00000/amozeshi-link1/main/docs/";
 
-        /* ==========================================================================================================================================================
-        =============================================================================================================================================================
-           ۲.  لیست آموزش‌ها و فایل‌های متنی آن‌ها را اینجا مشخص کنید
-           ====================================================================================================================================================== */
+        /* =========================================================
+           ۲. لیست آموزش‌ها
+           نکته جدید: متغیر icon اضافه شده تا بتوانید آیکون هر منو را تعیین کنید
+           ========================================================= */
         const tutorials = [
-            { id: "haproxy", title: "تک‌پورت کردن پاسارگارد", file: "haproxy.md" },
-            { id: "marzban", title: "راه‌اندازی و دیتابیس Marzban", file: "marzban.md" },
-            { id: "xui", title: "کانفیگ و مدیریت X-UI", file: "xui.md" }
-
-          
+            { id: "haproxy", title: "تک‌پورت پاسارگارد", file: "haproxy.md", icon: "⌂" },
+            { id: "marzban", title: "راه‌اندازی Marzban", file: "marzban.md", icon: "⚙" },
+            { id: "xui", title: "مدیریت X-UI", file: "xui.md", icon: "▤" },
+            { id: "reality", title: "تنظیمات Reality", file: "reality.md", icon: "◔" },
+            { id: "svmpanel", title: "توسعه svm-panel", file: "svmpanel.md", icon: "✉" }
         ];
 
-        const menuContainer = document.getElementById('dynamic-menu');
+        const dock = document.getElementById('sm-17-dock');
         const contentBody = document.getElementById('content-body');
+        const hl = dock.querySelector('.sm-17__hl');
 
-        // ساخت منو
-        tutorials.forEach(item => {
-            const li = document.createElement('li');
+        // ساخت منو به سبک جدید
+        tutorials.forEach((item) => {
             const a = document.createElement('a');
+            a.className = 'sm-17__item';
             a.href = "#" + item.id;
             a.id = "menu-" + item.id;
-            a.textContent = item.title;
             a.onclick = () => loadContent(item.id);
-            li.appendChild(a);
-            menuContainer.appendChild(li);
+            
+            a.innerHTML = \`<span class="sm-17__ic" aria-hidden="true">\${item.icon}</span><span class="sm-17__lb">\${item.title}</span>\`;
+            dock.appendChild(a);
         });
 
-        // بارگذاری محتوا بر اساس هَش URL (یا لود پیش‌فرض اولین آیتم)
+        // سیستم انیمیشن هاور داک (تبدیل شده از کد شما)
+        function initDockAnimation() {
+            const items = [...dock.querySelectorAll('.sm-17__item')];
+            const move = (el) => { 
+                if(el && hl) hl.style.setProperty('--y', (el.offsetTop - 12) + 'px'); 
+            };
+            
+            items.forEach((it) => {
+                it.addEventListener('pointerenter', () => move(it));
+                it.addEventListener('focus', () => move(it));
+            });
+            
+            dock.addEventListener('pointerleave', () => {
+                const active = dock.querySelector('[aria-current="page"]') || items[0];
+                move(active);
+            });
+        }
+
+        // بارگذاری محتوا بر اساس هَش URL
         async function loadContent(id) {
-            if (!id) {
-                id = window.location.hash.substring(1) || tutorials[0].id;
-            }
+            if (!id) id = window.location.hash.substring(1) || tutorials[0].id;
             const currentItem = tutorials.find(t => t.id === id) || tutorials[0];
 
-            // آپدیت وضعیت فعال منو
-            document.querySelectorAll('.menu-list a').forEach(a => a.classList.remove('active'));
-            document.getElementById("menu-" + currentItem.id).classList.add('active');
+            // مدیریت کلاس اکتیو برای داک جدید
+            document.querySelectorAll('.sm-17__item').forEach(a => a.removeAttribute('aria-current'));
+            const activeLink = document.getElementById("menu-" + currentItem.id);
+            if(activeLink) {
+                activeLink.setAttribute('aria-current', 'page');
+                // حرکت دادن هایلایت به سمت آیتم کلیک شده
+                if(hl) hl.style.setProperty('--y', (activeLink.offsetTop - 12) + 'px');
+            }
 
-            contentBody.innerHTML = '<div class="loading">در حال دریافت فایل ' + currentItem.file + ' از گیت‌هاب...</div>';
+            contentBody.innerHTML = '<div class="loading">در حال دریافت فایل ' + currentItem.file + '...</div>';
 
             try {
-                // درخواست خواندن فایل از گیت‌هاب
                 const response = await fetch(GITHUB_RAW_BASE + currentItem.file);
                 if (!response.ok) throw new Error("File not found");
                 
                 const text = await response.text();
-                
-                // تبدیل Markdown به HTML
                 contentBody.innerHTML = marked.parse(text);
-                
-                // اضافه کردن دکمه کپی به تمام باکس‌های کد
                 enhanceCodeBlocks();
-                
             } catch (error) {
                 contentBody.innerHTML = \`
-                    <h2 style="color:#dc2626;">خطا در بارگذاری!</h2>
-                    <p>فایل <b>\${currentItem.file}</b> پیدا نشد.</p>
-                    <p>لطفاً مطمئن شوید که پوشه‌ای به نام <code>docs</code> در ریپازیتوری خود ساخته‌اید و این فایل را درون آن آپلود کرده‌اید.</p>
+                    <h2 style="color:#ef4444;">خطا در بارگذاری!</h2>
+                    <p>فایل <b>\${currentItem.file}</b> در پوشه docs پیدا نشد.</p>
                 \`;
             }
         }
 
-        // تابعی برای اضافه کردن استایل‌ها و دکمه کپی به بلوک‌های کد
         function enhanceCodeBlocks() {
             const preTags = contentBody.querySelectorAll('pre');
             preTags.forEach(pre => {
@@ -195,10 +270,7 @@ export default {
                         const span = btn.querySelector('span');
                         span.innerText = 'کپی شد!';
                         btn.classList.add('copied');
-                        setTimeout(() => {
-                            span.innerText = 'کپی';
-                            btn.classList.remove('copied');
-                        }, 2000);
+                        setTimeout(() => { span.innerText = 'کپی'; btn.classList.remove('copied'); }, 2000);
                     });
                 };
 
@@ -208,9 +280,11 @@ export default {
             });
         }
 
-        // اجرای تابع هنگام لود صفحه
-        window.addEventListener('load', () => loadContent());
-        // مدیریت کلیک‌های Back و Forward در مرورگر
+        // اجرا
+        window.addEventListener('load', () => {
+            loadContent();
+            initDockAnimation(); // راه‌اندازی انیمیشن‌ها بعد از لود صفحه
+        });
         window.addEventListener('hashchange', () => loadContent());
     </script>
 </body>
