@@ -1,6 +1,6 @@
 <h1>آموزش جامع تک‌پورت کردن پنل پاسارگارد با HAProxy</h1>
 
-<p>این آموزش به شما کمک می‌کند تا پنل مدیریتی خود را روی یک دامنه (مثلاً <code>main1.sportsee.ru</code>) و لینک‌های سابسکریپشن کاربران را روی دامنه‌ای کاملاً متفاوت (مثلاً <code>sub.karnovo.net.ru</code>) قرار دهید. با این روش، دسترسی به پنل مدیریت از طریق لینک کاربران غیرممکن می‌شود.</p>
+<p>این آموزش به شما کمک می‌کند تا پنل مدیریتی خود را روی یک دامنه (مثلاً <code><span style="color: #ff4d4d;">main1.sportsee.ru</span></code>) و لینک‌های سابسکریپشن کاربران را روی دامنه‌ای کاملاً متفاوت (مثلاً <code><span style="color: #ff4d4d;">sub.karnovo.net.ru</span></code>) قرار دهید. با این روش، دسترسی به پنل مدیریت از طریق لینک کاربران غیرممکن می‌شود.</p>
 
 <blockquote>
   <strong>توجه:</strong> در تمامی کدهای زیر، عبارات مربوط به نام دامنه‌ها را با دامنه‌های واقعی خود جایگزین کنید.
@@ -42,7 +42,7 @@ UVICORN_FORWARDED_ALLOW_IPS = "127.0.0.1"</code></pre>
 
 <p>دریافت گواهینامه مشترک (دامنه‌های خود را در دستور زیر جایگزین کنید):</p>
 
-<pre><code>certbot certonly --standalone -d main1.sportsee.ru -d sub.karnovo.net.ru</code></pre>
+<pre><code>certbot certonly --standalone -d <span style="color: #ff4d4d;">main1.sportsee.ru</span> -d <span style="color: #ff4d4d;">sub.karnovo.net.ru</span></code></pre>
 
 <hr>
 
@@ -54,7 +54,7 @@ UVICORN_FORWARDED_ALLOW_IPS = "127.0.0.1"</code></pre>
 
 <p>کلیدها را ادغام کنید (توجه کنید مسیر فایل‌ها همیشه به نام <strong>دامنه اول</strong> ایجاد می‌شود):</p>
 
-<pre><code>cat /etc/letsencrypt/live/main1.sportsee.ru/fullchain.pem /etc/letsencrypt/live/main1.sportsee.ru/privkey.pem > /etc/haproxy/certs/all_domains.pem</code></pre>
+<pre><code>cat /etc/letsencrypt/live/<span style="color: #ff4d4d;">main1.sportsee.ru</span>/fullchain.pem /etc/letsencrypt/live/<span style="color: #ff4d4d;">main1.sportsee.ru</span>/privkey.pem > /etc/haproxy/certs/all_domains.pem</code></pre>
 
 <hr>
 
@@ -97,8 +97,8 @@ frontend front
     log-format "%ci:%cp [%tr] %ft %b/%s %TR/%Tw/%Tc/%Tr/%Ta %ST %B %CC %CS %tsc %ac/%fc/%bc/%sc/%rc %sq/%bq %hr %hs %{+Q}r %U"
     
     # شناسایی دامنه‌ها
-    acl host_panel hdr(host) -i main1.sportsee.ru
-    acl host_sub   hdr(host) -i sub.karnovo.net.ru
+    acl host_panel hdr(host) -i <span style="color: #ff4d4d;">main1.sportsee.ru</span>
+    acl host_sub   hdr(host) -i <span style="color: #ff4d4d;">sub.karnovo.net.ru</span>
     
     # هدایت ترافیک
     use_backend panel if host_panel
@@ -137,6 +137,6 @@ systemctl status haproxy</code></pre>
 
 <h2>قدم ششم: تنظیمات نهایی در داشبورد پاسارگارد</h2>
 
-<p>۱. با آدرس جدید <code>https://main1.sportsee.ru</code> وارد پنل شوید.<br>
+<p>۱. با آدرس جدید <code>https://<span style="color: #ff4d4d;">main1.sportsee.ru</span></code> وارد پنل شوید.<br>
 ۲. به بخش <strong>تنظیمات نودها (Nodes)</strong> بروید.<br>
-۳. فیلد <strong>دامنه سابسکریپشن (Subscription Domain)</strong> را روی <code>https://sub.karnovo.net.ru</code> تنظیم کنید.</p>
+۳. فیلد <strong>دامنه سابسکریپشن (Subscription Domain)</strong> را روی <code>https://<span style="color: #ff4d4d;">sub.karnovo.net.ru</span></code> تنظیم کنید.</p>
