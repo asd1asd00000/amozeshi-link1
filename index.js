@@ -61,7 +61,8 @@ export default {
             pointer-events: none;
         }
 
-        .sm-17__wrapper { position: relative; }
+        /* حذف position: relative برای رفع باگ محاسبه افست */
+        .sm-17__wrapper { display: flex; flex-direction: column; }
         
         .sm-17__item {
             position: relative;
@@ -138,6 +139,7 @@ export default {
             margin-top: 30px;
         }
         .tile {
+            position: relative;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
@@ -159,15 +161,27 @@ export default {
             border-color: rgba(255, 255, 255, 0.3);
             box-shadow: 0 15px 30px -10px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
         }
-        .tile-icon {
-            font-size: 45px;
-            color: #a78bfa;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        
+        /* استایل اختصاصی کاشی‌های پین شده */
+        .tile.pinned-tile {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: rgba(245, 158, 11, 0.3);
         }
-        .tile-title {
-            font-size: 15px;
-            font-weight: 600;
+        .tile.pinned-tile:hover {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.5);
         }
+        .tile-pinned-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 16px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+        }
+
+        .tile-icon { font-size: 45px; color: #a78bfa; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .pinned-tile .tile-icon { color: #fbbf24; }
+        .tile-title { font-size: 15px; font-weight: 600; }
 
         .code-wrapper { position: relative; margin: 20px 0; }
         .copy-btn {
@@ -227,7 +241,6 @@ export default {
                 tutorials = await menuResponse.json();
 
                 tutorials.forEach((item) => {
-                    // زیرمنوها
                     if (item.subItems && item.subItems.length > 0) {
                         const wrapper = document.createElement('div');
                         wrapper.className = 'sm-17__wrapper';
@@ -260,9 +273,7 @@ export default {
                         wrapper.appendChild(parent);
                         wrapper.appendChild(subMenu);
                         dock.appendChild(wrapper);
-                    } 
-                    // منوهای معمولی (شامل خانه)
-                    else {
+                    } else {
                         const a = document.createElement('a');
                         a.className = 'sm-17__item main-link';
                         a.href = "#" + item.id;
@@ -281,10 +292,17 @@ export default {
             }
         }
 
+        // سیستم انیمیشن با فرمول دقیق و بدون باگ
         function initDockAnimation() {
             const items = [...dock.querySelectorAll('.sm-17__item')];
             const move = (el) => { 
-                if(el && hl) hl.style.setProperty('--y', (el.offsetTop - 12) + 'px'); 
+                if(el && hl) {
+                    // محاسبه فاصله با استفاده از متد قدرتمند GetBoundingClientRect برای نادیده گرفتن اختلالات استایل
+                    const dockRect = dock.getBoundingClientRect();
+                    const elRect = el.getBoundingClientRect();
+                    const offset = elRect.top - dockRect.top + dock.scrollTop;
+                    hl.style.setProperty('--y', (offset - 12) + 'px'); 
+                }
             };
             
             items.forEach((it) => {
@@ -299,42 +317,73 @@ export default {
             });
         }
 
-        // تابع ساخت صفحه اصلی با کاشی‌ها
         function renderHomeTiles() {
+            let pinnedTutorials = [];
             let allTutorials = [];
             
-            // استخراج تمام آموزش‌ها (حذف منوی خانه)
+            // جدا کردن آموزش‌های پین شده از بقیه
             tutorials.forEach(item => {
                 if (item.isHome) return;
                 
                 if (item.subItems) {
                     item.subItems.forEach(sub => {
-                        allTutorials.push({ id: sub.id, title: sub.title, icon: item.icon || "📄" });
+                        const tutData = { id: sub.id, title: sub.title, icon: item.icon || "📄", pinned: sub.pinned };
+                        allTutorials.push(tutData);
+                        if (sub.pinned) pinnedTutorials.push(tutData);
                     });
                 } else if (item.file) {
-                    allTutorials.push({ id: item.id, title: item.title, icon: item.icon || "📄" });
+                    const tutData = { id: item.id, title: item.title, icon: item.icon || "📄", pinned: item.pinned };
+                    allTutorials.push(tutData);
+                    if (item.pinned) pinnedTutorials.push(tutData);
                 }
             });
 
-            // معکوس کردن لیست برای نمایش جدیدترین‌ها در ابتدا (حداکثر 15 آیتم)
-            const recentTutorials = allTutorials.reverse().slice(0, 15);
+            // حذف آموزش‌های پین شده از لیست «اخیراً اضافه شده» برای جلوگیری از تکرار
+            const recentTutorials = allTutorials.filter(t => !t.pinned).reverse().slice(0, 15);
 
-            let tilesHtml = '<div class="tile-grid">';
-            recentTutorials.forEach(tut => {
-                tilesHtml += \`
-                    <a href="#\${tut.id}" class="tile" onclick="loadContent('\${tut.id}')">
-                        <div class="tile-icon">\${tut.icon}</div>
-                        <div class="tile-title">\${tut.title}</div>
-                    </a>
+            let pageHtml = '';
+
+            // رندر بخش پین شده‌ها
+            if (pinnedTutorials.length > 0) {
+                let pinnedHtml = '<div class="tile-grid">';
+                pinnedTutorials.forEach(tut => {
+                    pinnedHtml += \`
+                        <a href="#\${tut.id}" class="tile pinned-tile" onclick="loadContent('\${tut.id}')">
+                            <div class="tile-pinned-badge">📌</div>
+                            <div class="tile-icon">\${tut.icon}</div>
+                            <div class="tile-title">\${tut.title}</div>
+                        </a>
+                    \`;
+                });
+                pinnedHtml += '</div><hr style="border:0; border-top:1px solid rgba(255,255,255,0.08); margin: 40px 0;">';
+                
+                pageHtml += \`
+                    <h2 style="color: #fbbf24; margin-top:0; border:none; text-align:center;">آموزش‌های پین‌شده</h2>
+                    \${pinnedHtml}
                 \`;
-            });
-            tilesHtml += '</div>';
+            }
 
-            contentBody.innerHTML = \`
-                <h1>آموزش‌های اخیر</h1>
-                <p style="text-align:center; color: rgba(255,255,255,0.6); margin-bottom: 30px;">دسترسی سریع به جدیدترین آموزش‌ها و کانفیگ‌ها</p>
-                \${tilesHtml}
-            \`;
+            // رندر بخش اخیر
+            if (recentTutorials.length > 0) {
+                let recentHtml = '<div class="tile-grid">';
+                recentTutorials.forEach(tut => {
+                    recentHtml += \`
+                        <a href="#\${tut.id}" class="tile" onclick="loadContent('\${tut.id}')">
+                            <div class="tile-icon">\${tut.icon}</div>
+                            <div class="tile-title">\${tut.title}</div>
+                        </a>
+                    \`;
+                });
+                recentHtml += '</div>';
+                
+                pageHtml += \`
+                    <h2 style="color: #a78bfa; margin-top:0; border:none; text-align:center;">\${pinnedTutorials.length > 0 ? 'سایر آموزش‌های اخیر' : 'آموزش‌های اخیر'}</h2>
+                    <p style="text-align:center; color: rgba(255,255,255,0.6); margin-bottom: 30px;">دسترسی سریع به جدیدترین کانفیگ‌ها و پنل‌ها</p>
+                    \${recentHtml}
+                \`;
+            }
+
+            contentBody.innerHTML = pageHtml;
         }
 
         async function loadContent(id) {
@@ -343,7 +392,6 @@ export default {
             
             let currentItem = null;
 
-            // جستجو
             for (const t of tutorials) {
                 if (t.id === id && !t.subItems) { currentItem = t; break; } 
                 else if (t.subItems) {
@@ -352,11 +400,8 @@ export default {
                 }
             }
             
-            if (!currentItem) {
-                currentItem = tutorials[0]; // که معمولا همان خانه است
-            }
+            if (!currentItem) currentItem = tutorials[0];
 
-            // مدیریت اکتیو بودن منوها
             document.querySelectorAll('.sm-17__item').forEach(a => a.removeAttribute('aria-current'));
             document.querySelectorAll('.sm-17__sub-item').forEach(a => a.classList.remove('active'));
             document.querySelectorAll('.sm-17__wrapper').forEach(w => w.classList.remove('has-active'));
@@ -370,18 +415,23 @@ export default {
                         wrapper.classList.add('has-active');
                         wrapper.querySelector('.sm-17__sub-menu').classList.add('open');
                         wrapper.querySelector('.sm-17__item').classList.add('expanded');
-                        if(hl) hl.style.setProperty('--y', (wrapper.querySelector('.sm-17__item').offsetTop - 12) + 'px');
+                        
+                        // حرکت هاله آبی برای زیرمنوها به صورت دقیق
+                        const dockRect = dock.getBoundingClientRect();
+                        const elRect = wrapper.querySelector('.sm-17__item').getBoundingClientRect();
+                        if(hl) hl.style.setProperty('--y', (elRect.top - dockRect.top + dock.scrollTop - 12) + 'px');
                     }
                 } else {
                     activeLink.setAttribute('aria-current', 'page');
-                    if(hl) hl.style.setProperty('--y', (activeLink.offsetTop - 12) + 'px');
+                    const dockRect = dock.getBoundingClientRect();
+                    const elRect = activeLink.getBoundingClientRect();
+                    if(hl) hl.style.setProperty('--y', (elRect.top - dockRect.top + dock.scrollTop - 12) + 'px');
                 }
             }
 
-            // بررسی اگر منوی خانه کلیک شده است
             if (currentItem.isHome) {
                 renderHomeTiles();
-                return; // پایان عملیات برای صفحه خانه
+                return;
             }
 
             contentBody.innerHTML = '<div class="loading">در حال دریافت فایل ' + currentItem.file + '...</div>';
