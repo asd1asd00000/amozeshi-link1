@@ -11,12 +11,12 @@
     "icon": "🛡️",
     "subItems": [
       { "id": "pg-install", "title": "نصب اولیه", "file": "pg-install.md" },
-      { "id": "haproxy", "title": "تک‌پورت کردن", "file": "haproxy.md" }
+      { "id": "haproxy", "title": "تک‌پورت کردن", "file": "haproxy.md", "pinned": true }
     ]
   },
   {
     "id": "marzban",
-    "title": "راه اندازی اولیه وثانویه این اپ بسایر خوب cdf Marzban",
+    "title": "راه‌اندازی Marzban",
     "file": "marzban.md",
     "icon": "⚙"
   },
@@ -33,6 +33,7 @@
     "id": "reality",
     "title": "تنظیمات Reality",
     "file": "reality.md",
-    "icon": "◔"
+    "icon": "◔",
+    "pinned": true
   }
 ]
