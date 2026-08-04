@@ -1,7 +1,32 @@
 [
-  { "id": "haproxy", "title": "تک‌پورت پاسارگارد", "file": "haproxy.md", "icon": "⌂" },
-  { "id": "marzban", "title": "راه‌اندازی Marzban", "file": "marzban.md", "icon": "⚙" },
-  { "id": "xui", "title": "مدیریت X-UI", "file": "xui.md", "icon": "▤" },
-  { "id": "reality", "title": "تنظیمات Reality", "file": "reality.md", "icon": "◔" },
-  { "id": "svmpanel", "title": "توسعه svm-panel", "file": "svmpanel.md", "icon": "✉" }
+  {
+    "id": "pasarguard",
+    "title": "پاسارگارد",
+    "icon": "⌂",
+    "subItems": [
+      { "id": "pg-install", "title": "نصب اولیه", "file": "pg-install.md" },
+      { "id": "haproxy", "title": "تک‌پورت کردن", "file": "haproxy.md" }
+    ]
+  },
+  {
+    "id": "marzban",
+    "title": "راه‌اندازی Marzban",
+    "file": "marzban.md",
+    "icon": "⚙"
+  },
+  {
+    "id": "xui",
+    "title": "پنل X-UI",
+    "icon": "▤",
+    "subItems": [
+      { "id": "xui-install", "title": "نصب و راه‌اندازی", "file": "xui-install.md" },
+      { "id": "xui-config", "title": "کانفیگ مسیریابی", "file": "xui-config.md" }
+    ]
+  },
+  {
+    "id": "reality",
+    "title": "تنظیمات Reality",
+    "file": "reality.md",
+    "icon": "◔"
+  }
 ]
