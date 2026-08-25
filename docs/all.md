@@ -7,9 +7,9 @@
 
 3- 💾 Manual Backup (Save locally)
 
-4- 🔄 Manual Restore (From local zip)
+<4- 🔄 Manual Restore (From local zip)
 
-5- 🚪 Exit << 
+>5- 🚪 Exit 
 
 >تبیسمتبیس بسیمنتسیمبنت
 > این یک نقل‌قول است.
