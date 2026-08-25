@@ -22,7 +22,7 @@
 > 4- 🔄 Manual Restore (From local zip)<br>
 > 5- 🚪 Exit <br>
 
-----------------------------------------------------------------------------------
+
 هنگام ریستور میتوان نام دامنه پنل را هم عوض کرد - ولی قبل از ان باید در پنل جدید جداسازی لینک پنل و ساب رو انجام بدیم (وقتی بکاپ پنل قدیمی لینک ساب و پنل جدا باشد)
 ``` bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/asd1asd00000/backup-restore-pasargurd/main/install.sh)"
