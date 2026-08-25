@@ -5,7 +5,7 @@
 3- 💾 Manual Backup (Save locally)
 4- 🔄 Manual Restore (From local zip)
 5- 🚪 Exit
-`>
+`
 
 
 ----------------------------------------------------------------------------------
