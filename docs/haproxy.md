@@ -139,4 +139,4 @@ systemctl status haproxy</code></pre>
 
 <p>۱. با آدرس جدید <code>https://<span style="color: #ff4d4d;">main1.sportsee.ru</span></code> وارد پنل شوید.<br>
 ۲. به بخش <strong>settings/subscriptions </strong> بروید.<br>
-۳. فیلد <strong>دامنه سابسکریپشن (Subscription Domain)</strong> را روی <code>https://<span style="color: #ff4d4d;">sub.karnovo.net.ru</span></code> تنظیم کنید.</p>
+۳. فیلد <strong>دامنه سابسکریپشن (URL Prefix)</strong> را روی <code>https://<span style="color: #ff4d4d;">sub.karnovo.net.ru</span></code> تنظیم کنید.</p>
