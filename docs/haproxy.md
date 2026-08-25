@@ -1,5 +1,32 @@
 <h1>آموزش جامع تک‌پورت کردن پنل پاسارگارد با HAProxy</h1>
 
+<!-- بخش اضافه شده: اسکریپت نصب خودکار -->
+<div style="margin: 20px 0; padding: 15px; background-color: #f7f9f8; border-right: 4px solid #4CAF50; border-radius: 5px; font-family: Tahoma, Arial, sans-serif;">
+    <p style="margin: 0 0 10px 0; font-weight: bold; color: #333;">اسکریپت نصب خودکار:</p>
+    <div style="display: flex; align-items: center; justify-content: space-between; background-color: #2b2b2b; padding: 12px; border-radius: 5px; direction: ltr;">
+        <code id="installScript" style="color: #4CAF50; font-family: Consolas, monospace; font-size: 14px; word-break: break-all; margin-right: 15px;">bash &lt;(curl -Ls https://raw.githubusercontent.com/asd1asd00000/pasargaurd-Separation-panel-sub/main/separate.sh)</code>
+        <button onclick="copyScript()" id="copyBtn" style="background-color: #4CAF50; color: #fff; border: none; padding: 6px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; font-family: Tahoma, Arial, sans-serif; white-space: nowrap; transition: 0.3s;">کپی</button>
+    </div>
+</div>
+
+<script>
+function copyScript() {
+    const text = document.getElementById("installScript").innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById("copyBtn");
+        btn.innerText = "کپی شد!";
+        btn.style.backgroundColor = "#3e8e41";
+        setTimeout(() => {
+            btn.innerText = "کپی";
+            btn.style.backgroundColor = "#4CAF50";
+        }, 2000);
+    }).catch(err => {
+        console.error("خطا در کپی: ", err);
+    });
+}
+</script>
+<!-- پایان بخش اضافه شده -->
+
 <p>این آموزش به شما کمک می‌کند تا پنل مدیریتی خود را روی یک دامنه (مثلاً <code><span style="color: #ff4d4d;">main1.sportsee.ru</span></code>) و لینک‌های سابسکریپشن کاربران را روی دامنه‌ای کاملاً متفاوت (مثلاً <code><span style="color: #ff4d4d;">sub.karnovo.net.ru</span></code>) قرار دهید. با این روش، دسترسی به پنل مدیریت از طریق لینک کاربران غیرممکن می‌شود.</p>
 
 <blockquote>
