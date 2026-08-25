@@ -30,9 +30,9 @@
     ]
   },
   {
-    "id": "reality",
-    "title": "تنظیمات Reality",
-    "file": "reality.md",
+    "id": "all",
+    "title": "all",
+    "file": "all.md",
     "icon": "◔",
     "pinned": true
   }
