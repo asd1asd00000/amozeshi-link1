@@ -9,7 +9,7 @@
 
 4- 🔄 Manual Restore (From local zip)
 
-< 5- 🚪 Exit
+5- 🚪 Exit <
 
 > این یک نقل‌قول است.
 
