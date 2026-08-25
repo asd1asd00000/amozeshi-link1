@@ -138,5 +138,5 @@ systemctl status haproxy</code></pre>
 <h2>قدم ششم: تنظیمات نهایی در داشبورد پاسارگارد</h2>
 
 <p>۱. با آدرس جدید <code>https://<span style="color: #ff4d4d;">main1.sportsee.ru</span></code> وارد پنل شوید.<br>
-۲. به بخش <strong>تنظیمات نودها (Nodes)</strong> بروید.<br>
+۲. به بخش <strong>settings/subscriptions (Nodes)</strong> بروید.<br>
 ۳. فیلد <strong>دامنه سابسکریپشن (Subscription Domain)</strong> را روی <code>https://<span style="color: #ff4d4d;">sub.karnovo.net.ru</span></code> تنظیم کنید.</p>
