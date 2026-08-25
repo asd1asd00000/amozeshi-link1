@@ -4,7 +4,7 @@
 ```
 bash <(curl -Ls https://raw.githubusercontent.com/asd1asd00000/pasargaurd-Separation-panel-sub/main/separate.sh)
 ```
-بعد از پایان کار اسکریپت : باید مرحله ششم رو دستی در خود پنل انجام دهید
+> بعد از پایان کار اسکریپت : باید مرحله ششم رو دستی در خود پنل انجام دهید
 
 
 <p>این آموزش به شما کمک می‌کند تا پنل مدیریتی خود را روی یک دامنه (مثلاً <code><span style="color: #ff4d4d;">main1.sportsee.ru</span></code>) و لینک‌های سابسکریپشن کاربران را روی دامنه‌ای کاملاً متفاوت (مثلاً <code><span style="color: #ff4d4d;">sub.karnovo.net.ru</span></code>) قرار دهید. با این روش، دسترسی به پنل مدیریت از طریق لینک کاربران غیرممکن می‌شود.</p>
