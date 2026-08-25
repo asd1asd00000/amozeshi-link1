@@ -1,15 +1,5 @@
 <h1>آموزش جامع تک‌پورت کردن پنل پاسارگارد با HAProxy</h1>
 
-<!-- بخش اضافه شده: اسکریپت نصب خودکار -->
-<div style="margin: 20px 0; padding: 15px; background: #f4f6f8; border-radius: 8px; border: 1px solid #e1e4e8;">
-    <h3 style="margin-top: 0; color: #24292e;">اسکریپت نصب خودکار:</h3>
-    <div style="display: flex; justify-content: space-between; align-items: center; background: #282c34; padding: 12px; border-radius: 6px; direction: ltr;">
-        <code style="color: #abb2bf; font-family: Consolas, monospace; font-size: 14px; word-break: break-all;">bash &lt;(curl -Ls https://raw.githubusercontent.com/asd1asd00000/pasargaurd-Separation-panel-sub/main/separate.sh)</code>
-        <button onclick="navigator.clipboard.writeText('bash <(curl -Ls https://raw.githubusercontent.com/asd1asd00000/pasargaurd-Separation-panel-sub/main/separate.sh)'); this.innerText='کپی شد!'; setTimeout(() => this.innerText='کپی کردن', 2000);" style="background: #0366d6; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; margin-left: 15px; min-width: 80px; transition: 0.2s;">کپی کردن</button>
-    </div>
-</div>
-<!-- پایان بخش اضافه شده -->
-
 <p>این آموزش به شما کمک می‌کند تا پنل مدیریتی خود را روی یک دامنه (مثلاً <code><span style="color: #ff4d4d;">main1.sportsee.ru</span></code>) و لینک‌های سابسکریپشن کاربران را روی دامنه‌ای کاملاً متفاوت (مثلاً <code><span style="color: #ff4d4d;">sub.karnovo.net.ru</span></code>) قرار دهید. با این روش، دسترسی به پنل مدیریت از طریق لینک کاربران غیرممکن می‌شود.</p>
 
 <blockquote>
