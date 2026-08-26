@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
 
 <body>
 
