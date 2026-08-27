@@ -1,4 +1,4 @@
-// index.js
+// index.js--- این فایل رو در ورکر کلودفلر باید قرار بدیم ------
 var index_default = {
   async fetch(request) {
     const html = `
